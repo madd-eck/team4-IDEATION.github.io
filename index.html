@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Ideation</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        details > summary {
+            list-style: none;
+            cursor: pointer;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen flex flex-col items-center p-6">
+
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-2xl p-8 mb-8">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-2">AI Project Ideation</h1>
+            <p class="text-xl text-gray-600">Generate creative project ideas with Gemini</p>
+        </header>
+
+        <!-- API Key and Controls -->
+        <div class="bg-gray-50 rounded-lg p-6 mb-8 border border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">Configuration</h2>
+            <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
+                <div class="relative flex-grow mb-4 md:mb-0">
+                    <label for="apikey" class="block text-sm font-medium text-gray-700 mb-1">Gemini API Key</label>
+                    <input type="password" id="apikey" name="apikey" placeholder="Enter your API key"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                    <button id="toggleApiKey" class="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-sm leading-5">
+                        <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex-grow">
+                    <label for="models" class="block text-sm font-medium text-gray-700 mb-1">AI Model</label>
+                    <select name="models" id="models" disabled
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 text-gray-400 cursor-not-allowed focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                        <option value="gemini-2.5-flash-preview-05-20">Gemini 2.5 Flash</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Parameters Form -->
+        <form id="ideationForm" class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">Project Parameters</h2>
+            
+            <div class="mb-4">
+                <label for="prompt" class="block text-sm font-medium text-gray-700 mb-1">Problem Statement</label>
+                <input type="text" id="prompt" name="prompt" placeholder="e.g., How to improve water conservation in urban areas"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Preferred Technologies</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="ai/ml" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span>AI/ML</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="iot" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span>IOT</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="mobiledev" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span>Mobile Development</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="webdev" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span>Web Development</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="embeddedsys" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span>Embedded Systems</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="robotics" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span>Robotics</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="controlsys" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span>Control Systems</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="cybersecurity" class="rounded text-blue-600 focus:ring-blue-500">
+                        <span>CyberSecurity</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="ideaslider" class="block text-sm font-medium text-gray-700 mb-1">Innovation (Low to High): <span id="innovationValue" class="font-bold">5</span></label>
+                <input type="range" id="ideaslider" name="ideaslider" min="0" max="10" value="5"
+                       class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+            </div>
+
+            <div class="mb-6">
+                <label for="prices" class="block text-sm font-medium text-gray-700 mb-1">Choose a Budget</label>
+                <select name="prices" id="prices"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                    <option value="200-500">$200 - $500</option>
+                    <option value="500-800">$500 - $800</option>
+                    <option value="800-1200">$800 - $1,200</option>
+                    <option value="1200+">$1,200+</option>
+                </select>
+            </div>
+            
+            <!-- Advanced Customization -->
+            <div class="bg-gray-100 rounded-lg p-4 mt-6">
+                <h3 class="text-lg font-bold text-gray-700 mb-2">Advanced Customization</h3>
+                <div class="flex flex-col md:flex-row md:space-x-4">
+                    <div class="flex-1 mb-4 md:mb-0">
+                        <label for="numIdeas" class="block text-sm font-medium text-gray-700 mb-1">Number of Ideas</label>
+                        <select id="numIdeas" name="numIdeas"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3" selected>3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div class="flex-1">
+                        <label for="keywords" class="block text-sm font-medium text-gray-700 mb-1">Keywords to Include (optional)</label>
+                        <input type="text" id="keywords" name="keywords" placeholder="e.g., blockchain, smart city"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-6">
+                <button type="button" id="generateButton"
+                        class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-lg shadow-md hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200 ease-in-out transform hover:scale-105">
+                    Generate Project Ideas!
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Error/Message Modal -->
+    <div id="messageModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 md:w-1/3">
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Message</h3>
+            <p id="messageText" class="text-gray-700 mb-4"></p>
+            <div class="text-right">
+                <button id="closeModal" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 text-gray-800 transition duration-150 ease-in-out">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="hidden flex flex-col items-center justify-center space-y-4">
+        <div class="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        <p class="text-lg text-gray-600">Generating ideas...</p>
+    </div>
+
+    <!-- Ideas Output -->
+    <div id="ideasOutput" class="w-full max-w-4xl hidden p-4">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-6">Generated Ideas</h2>
+        <div id="ideasContainer" class="space-y-8">
+            <!-- Ideas will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiKeyInput = document.getElementById('apikey');
+            const toggleApiKeyButton = document.getElementById('toggleApiKey');
+            const generateButton = document.getElementById('generateButton');
+            const ideaslider = document.getElementById('ideaslider');
+            const innovationValueSpan = document.getElementById('innovationValue');
+            const messageModal = document.getElementById('messageModal');
+            const messageText = document.getElementById('messageText');
+            const closeModalButton = document.getElementById('closeModal');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const ideasOutput = document.getElementById('ideasOutput');
+            const ideasContainer = document.getElementById('ideasContainer');
+
+            let generatedIdeaTexts = []; // Store the full text of each idea
+
+            // Update innovation value display
+            ideaslider.addEventListener('input', () => {
+                innovationValueSpan.textContent = ideaslider.value;
+            });
+
+            // Toggle API Key visibility
+            toggleApiKeyButton.addEventListener('click', () => {
+                const type = apiKeyInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                apiKeyInput.setAttribute('type', type);
+                const iconPath = type === 'password'
+                    ? "M10 12a2 2 0 100-4 2 2 0 000 4zM.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                    : "M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 10C3.732 5.943 7.522 3 12 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S3.732 14.057 2.458 10zM12 14a4 4 0 100-8 4 4 0 000 8z";
+                toggleApiKeyButton.querySelector('path').setAttribute('d', iconPath);
+            });
+
+            // Show and hide modal
+            function showMessage(message) {
+                messageText.textContent = message;
+                messageModal.classList.remove('hidden');
+            }
+
+            closeModalButton.addEventListener('click', () => {
+                messageModal.classList.add('hidden');
+            });
+
+            // Handle API calls
+            async function generateIdeas(prompt) {
+                const apiKey = apiKeyInput.value.trim();
+                const modelName = document.getElementById('models').value;
+
+                if (!apiKey) {
+                    showMessage('Please enter a valid Gemini API key.');
+                    return null;
+                }
+
+                // Show loading spinner
+                loadingSpinner.classList.remove('hidden');
+
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        topK: 40,
+                        topP: 1,
+                    },
+                };
+                
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error.message || 'API request failed');
+                    }
+                    
+                    const result = await response.json();
+                    return result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                } catch (error) {
+                    console.error('API Error:', error);
+                    showMessage(`An error occurred: ${error.message}. Please check your API key and try again.`);
+                    return null;
+                } finally {
+                    loadingSpinner.classList.add('hidden');
+                }
+            }
+            
+            // Function to render ideas from the generated text
+            function renderIdeas(generatedText) {
+                const projectIdeas = generatedText.split('**Project Title**:').slice(1);
+                generatedIdeaTexts = projectIdeas;
+                
+                let ideasHtml = '';
+                projectIdeas.forEach((ideaText, index) => {
+                    const [title, rest] = ideaText.split('**Description**:', 2);
+                    const content = `**Description**:${rest}`;
+                    const formattedContent = content
+                        .replace(/\*\*(.*?)\*\*/g, '<h3>$1</h3>')
+                        .replace(/^- /gm, '<li>')
+                        .replace(/\n\n/g, '<br><br>')
+                        .replace(/\n/g, '<br>')
+                        .replace(/<br><br><li>/g, '<ul><li>')
+                        .replace(/<\/li><br><br>/g, '</li></ul><br><br>');
+
+                    ideasHtml += `
+                        <details class="rounded-xl shadow-lg overflow-hidden transition-all duration-300 ease-in-out">
+                            <summary class="flex items-center justify-between p-6 bg-blue-100 text-blue-800 font-bold hover:bg-blue-200 transition-colors duration-200 ease-in-out">
+                                <span>${title.trim()}</span>
+                                <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </summary>
+                            <div class="p-6 bg-white border-t border-gray-200" id="idea-card-${index}">
+                                <div class="idea-content">
+                                    ${formattedContent}
+                                </div>
+                                <div class="flex items-center justify-end space-x-2 mt-4">
+                                    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-150 ease-in-out copy-button" data-id="${index}">
+                                        Copy Idea
+                                    </button>
+                                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out refine-button" data-id="${index}">
+                                        Refine Idea
+                                    </button>
+                                </div>
+                                <div class="refine-controls hidden mt-4">
+                                    <label for="refine-prompt-${index}" class="block text-sm font-medium text-gray-700 mb-1">How would you like to refine this?</label>
+                                    <div class="flex space-x-2">
+                                        <input type="text" id="refine-prompt-${index}" placeholder="e.g., Make it focused on IoT" class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
+                                        <button class="refine-submit-button px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-150 ease-in-out" data-id="${index}">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+                    `;
+                });
+                
+                ideasContainer.innerHTML = ideasHtml;
+                ideasOutput.classList.remove('hidden');
+                addEventListeners();
+            }
+
+            // Add event listeners for new buttons
+            function addEventListeners() {
+                // Copy buttons
+                document.querySelectorAll('.copy-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const id = e.target.dataset.id;
+                        const textToCopy = `Project Title: ${generatedIdeaTexts[id].trim()}`;
+                        const tempTextarea = document.createElement('textarea');
+                        tempTextarea.value = textToCopy;
+                        document.body.appendChild(tempTextarea);
+                        tempTextarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(tempTextarea);
+                        showMessage('Idea copied to clipboard!');
+                    });
+                });
+
+                // Refine buttons
+                document.querySelectorAll('.refine-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const id = e.target.dataset.id;
+                        const refineControls = document.querySelector(`#idea-card-${id} .refine-controls`);
+                        refineControls.classList.remove('hidden');
+                    });
+                });
+
+                // Refine submit buttons
+                document.querySelectorAll('.refine-submit-button').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const id = e.target.dataset.id;
+                        const refinePromptInput = document.getElementById(`refine-prompt-${id}`);
+                        const refinePrompt = refinePromptInput.value.trim();
+                        const originalIdea = generatedIdeaTexts[id];
+                        
+                        if (!refinePrompt) {
+                            showMessage('Please enter a refinement prompt.');
+                            return;
+                        }
+
+                        // Build the refinement prompt
+                        const fullRefinementPrompt = `Given the following project idea:\n\n---\n${originalIdea}\n---\n\nRefine the idea based on this request: "${refinePrompt}". The output should only be the refined project idea, following the same formatting as the original.`;
+                        
+                        const refinedText = await generateIdeas(fullRefinementPrompt);
+                        
+                        if (refinedText) {
+                            // Update the content of the specific idea card
+                            const cardContent = document.querySelector(`#idea-card-${id} .idea-content`);
+                            const formattedContent = refinedText
+                                .replace(/\*\*(.*?)\*\*/g, '<h3>$1</h3>')
+                                .replace(/^- /gm, '<li>')
+                                .replace(/\n\n/g, '<br><br>')
+                                .replace(/\n/g, '<br>')
+                                .replace(/<br><br><li>/g, '<ul><li>')
+                                .replace(/<\/li><br><br>/g, '</li></ul><br><br>');
+                            cardContent.innerHTML = formattedContent;
+                            
+                            // Update the stored text for potential future refinements
+                            generatedIdeaTexts[id] = refinedText;
+                            
+                            // Hide the refinement controls
+                            document.querySelector(`#idea-card-${id} .refine-controls`).classList.add('hidden');
+                            refinePromptInput.value = ''; // Clear the input field
+                            
+                            showMessage('Idea refined successfully!');
+                        } else {
+                            showMessage('Refinement failed. Please try again.');
+                        }
+                    });
+                });
+            }
+
+            // Main generation button handler
+            generateButton.addEventListener('click', async () => {
+                const problemStatement = document.getElementById('prompt').value.trim();
+                const innovation = ideaslider.value;
+                const budget = document.getElementById('prices').value;
+                const numIdeas = document.getElementById('numIdeas').value;
+                const keywords = document.getElementById('keywords').value.trim();
+                
+                const technologies = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+                    .map(cb => cb.parentElement.textContent.trim());
+
+                // Hide previous content
+                ideasOutput.classList.add('hidden');
+                ideasContainer.innerHTML = '';
+
+                let prompt = `Generate ${numIdeas} innovative senior design project ideas for computer engineering students with these specifications:\n`;
+                prompt += `Team: 4 students, 2 semesters (8-9 months)\n`;
+                prompt += `Budget: $${budget}\n`;
+                prompt += `Innovation Level: ${innovation}/10 (1=safe/proven, 10=cutting-edge/risky)\n`;
+
+                if (problemStatement) {
+                    prompt += `Problem to Solve: ${problemStatement}\n`;
+                }
+                if (technologies.length > 0) {
+                    prompt += `Preferred Technologies: ${technologies.join(', ')}\n`;
+                }
+                if (keywords) {
+                    prompt += `Keywords to Include: ${keywords}\n`;
+                }
+
+                prompt += `\nFor each project, provide:\n`;
+                prompt += `1. **Project Title**: Clear, descriptive name\n`;
+                prompt += `2. **Description**: 2-3 sentences explaining the concept and target problem\n`;
+                prompt += `3. **Key Components**: List of required hardware/software components\n`;
+                prompt += `4. **Technologies**: Specific technologies used\n`;
+                prompt += `5. **Estimated Cost**: Breakdown of major components\n`;
+                prompt += `6. **Timeline**: 8-month milestone timeline\n`;
+                prompt += `7. **Market Appeal**: Target audience and value proposition\n`;
+                prompt += `8. **Challenges**: Main technical and implementation challenges\n`;
+                prompt += `9. **Unique Value**: What makes this project special/different\n`;
+                prompt += `\nFormat each project clearly with bold headers and bullet points.`;
+
+                const generatedText = await generateIdeas(prompt);
+                
+                if (generatedText) {
+                    renderIdeas(generatedText);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
